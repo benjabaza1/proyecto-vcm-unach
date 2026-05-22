@@ -5,39 +5,46 @@ import '../constants/app_colors.dart';
 import '../services/auth_service.dart';
 import '../widgets/boton_principal.dart';
 import 'inicio_screen.dart';
-import 'registro_screen.dart';
+import 'login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegistroScreen extends StatefulWidget {
+  const RegistroScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegistroScreen> createState() => _RegistroScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistroScreenState extends State<RegistroScreen> {
   final correoController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmarPasswordController = TextEditingController();
 
   bool cargando = false;
 
-  Future<void> iniciarSesion() async {
+  Future<void> registrarUsuario() async {
     final correo = correoController.text.trim().toLowerCase();
     final password = passwordController.text.trim();
+    final confirmarPassword = confirmarPasswordController.text.trim();
 
     if (!correo.endsWith('@alu.unach.cl')) {
-      mostrarMensaje('Debes ingresar un correo @alu.unach.cl');
+      mostrarMensaje('Debes usar un correo institucional @alu.unach.cl');
       return;
     }
 
-    if (password.isEmpty) {
-      mostrarMensaje('Debes ingresar una contraseña');
+    if (password.length < 6) {
+      mostrarMensaje('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (password != confirmarPassword) {
+      mostrarMensaje('Las contraseñas no coinciden');
       return;
     }
 
     setState(() => cargando = true);
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: correo,
         password: password,
       );
@@ -48,21 +55,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const InicioScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const InicioScreen()),
       );
     } on FirebaseAuthException catch (e) {
-      mostrarMensaje('Error Firebase: ${e.code}');
 
-    } catch (e) {
-      mostrarMensaje('Error general: $e');
+      print('ERROR FIREBASE: ${e.code}');
+      print('MENSAJE: ${e.message}');
+
+      if (e.code == 'email-already-in-use') {
+
+        mostrarMensaje('Este correo ya está registrado. Inicia sesión.');
+
+      } else {
+
+        mostrarMensaje('No se pudo registrar el usuario.');
+
+      }
 
     } finally {
 
       if (mounted) {
         setState(() => cargando = false);
       }
+
     }
   }
 
@@ -76,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     correoController.dispose();
     passwordController.dispose();
+    confirmarPasswordController.dispose();
     super.dispose();
   }
 
@@ -89,20 +105,19 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(25),
           child: Column(
             children: [
-
-              const SizedBox(height: 35),
+              const SizedBox(height: 25),
 
               Image.asset(
                 'assets/images/logo_unach.webp',
-                height: 110,
+                height: 105,
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 25),
 
               const Text(
-                'Inicio de Sesión',
+                'Registro de Usuario',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: azulUnach,
                 ),
@@ -111,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 10),
 
               const Text(
-                'Accede con tu correo institucional UNACH',
+                'Crea tu cuenta usando tu correo institucional UNACH.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
@@ -119,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 35),
 
               campoLogin(
                 controller: correoController,
@@ -127,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 icono: Icons.email,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
               campoLogin(
                 controller: passwordController,
@@ -136,36 +151,36 @@ class _LoginScreenState extends State<LoginScreen> {
                 oculto: true,
               ),
 
-              const SizedBox(height: 35),
+              const SizedBox(height: 18),
 
-              cargando
-                  ? const CircularProgressIndicator(
-                color: azulUnach,
-              )
-                  : BotonPrincipal(
-                texto: 'Ingresar',
-                onPressed: iniciarSesion,
+              campoLogin(
+                controller: confirmarPasswordController,
+                label: 'Confirmar contraseña',
+                icono: Icons.lock_outline,
+                oculto: true,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
+
+              cargando
+                  ? const CircularProgressIndicator(color: azulUnach)
+                  : BotonPrincipal(
+                texto: 'Crear cuenta',
+                onPressed: registrarUsuario,
+              ),
+
+              const SizedBox(height: 18),
 
               TextButton(
                 onPressed: () {
-
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const RegistroScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
                   );
-
                 },
                 child: const Text(
-                  'Crear cuenta nueva',
-                  style: TextStyle(
-                    color: azulUnach,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  'Ya tengo cuenta',
+                  style: TextStyle(color: azulUnach),
                 ),
               ),
             ],
