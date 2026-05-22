@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "559131762601",
+    "project_id": "proyectovcm-3f3d1",
+    "storage_bucket": "proyectovcm-3f3d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559131762601:android:e9b80e37249b46c0fa6eb8",
+        "android_client_info": {
+          "package_name": "cl.baza.proyectovcm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi27n043iMuEgkvBGUuajum25xId4KXuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
