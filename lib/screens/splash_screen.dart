@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
-import 'inicio_screen.dart';
+import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,35 +13,31 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
+      if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const InicioScreen(),
+          builder: (_) => const LoginScreen(),
         ),
       );
-
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
-
             Image.asset(
               'assets/images/logo_unach.webp',
               height: 140,
@@ -74,6 +70,15 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
+            const SizedBox(height: 8),
+
+            const Text(
+              'Video del Jueves',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black45,
+              ),
+            ),
           ],
         ),
       ),
