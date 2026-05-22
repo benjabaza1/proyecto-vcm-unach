@@ -1,112 +1,199 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/app_colors.dart';
-import '../widgets/base_pantalla.dart';
-import '../widgets/boton_principal.dart';
 import 'inicio_screen.dart';
 
-class FinalScreen extends StatelessWidget {
+class FinalScreen extends StatefulWidget {
   const FinalScreen({super.key});
 
   @override
+  State<FinalScreen> createState() => _FinalScreenState();
+}
+
+class _FinalScreenState extends State<FinalScreen>
+    with SingleTickerProviderStateMixin {
+
+  late AnimationController controller;
+  late Animation<double> fadeAnimation;
+  late Animation<double> scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    );
+
+    fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(controller);
+
+    scaleAnimation = Tween<double>(
+      begin: 0.7,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.elasticOut,
+      ),
+    );
+
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BasePantalla(
-      indexActual: 3,
-      child: Column(
-        children: [
-          const SizedBox(height: 30),
 
-          const Icon(
-            Icons.celebration,
-            size: 90,
-            color: azulUnach,
-          ),
+    return Scaffold(
 
-          const SizedBox(height: 20),
+      backgroundColor: Colors.white,
 
-          const Text(
-            '¡Felicitaciones!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: azulUnach,
-            ),
-          ),
+      body: Center(
 
-          const SizedBox(height: 15),
+        child: FadeTransition(
 
-          const Text(
-            'Has completado correctamente el Video del Jueves y participaste en la actividad VCM de la Universidad Adventista de Chile.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 15,
-              height: 1.5,
-            ),
-          ),
+          opacity: fadeAnimation,
 
-          const SizedBox(height: 35),
+          child: ScaleTransition(
 
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(28),
-            decoration: BoxDecoration(
-              color: fondoSuave,
-              borderRadius: BorderRadius.circular(25),
-              border: Border.all(
-                color: azulUnach,
-                width: 2,
+            scale: scaleAnimation,
+
+            child: Padding(
+
+              padding: const EdgeInsets.all(25),
+
+              child: Container(
+
+                width: double.infinity,
+
+                padding: const EdgeInsets.all(30),
+
+                decoration: BoxDecoration(
+
+                  color: fondoSuave,
+
+                  borderRadius: BorderRadius.circular(30),
+
+                  boxShadow: [
+
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+
+                  ],
+                ),
+
+                child: Column(
+
+                  mainAxisSize: MainAxisSize.min,
+
+                  children: [
+
+                    Container(
+
+                      padding: const EdgeInsets.all(22),
+
+                      decoration: const BoxDecoration(
+                        color: azulUnach,
+                        shape: BoxShape.circle,
+                      ),
+
+                      child: const Icon(
+                        Icons.emoji_events,
+                        color: Colors.white,
+                        size: 65,
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    const Text(
+                      '¡Encuesta enviada!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: azulUnach,
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    const Text(
+                      'Gracias por participar en el proyecto VCM de la Universidad Adventista de Chile.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        height: 1.6,
+                        color: Colors.black87,
+                      ),
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    const Text(
+                      'Tu opinión fue registrada exitosamente en Firebase.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+
+                    const SizedBox(height: 35),
+
+                    ElevatedButton.icon(
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: azulUnach,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 15,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+
+                      onPressed: () {
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const InicioScreen(),
+                          ),
+                              (route) => false,
+                        );
+
+                      },
+
+                      icon: const Icon(Icons.home),
+
+                      label: const Text(
+                        'Volver al inicio',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            child: Column(
-              children: [
-                const Icon(
-                  Icons.workspace_premium,
-                  size: 90,
-                  color: azulUnach,
-                ),
-
-                const SizedBox(height: 15),
-
-                Text(
-                  'Insignia del Jueves',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                    color: azulUnach,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                const Text(
-                  'Compromiso, aprendizaje y participación académica.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
           ),
-
-          const Spacer(),
-
-          BotonPrincipal(
-            texto: 'Volver al inicio',
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const InicioScreen(),
-                ),
-                    (route) => false,
-              );
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

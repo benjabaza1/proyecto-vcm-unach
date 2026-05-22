@@ -1,17 +1,107 @@
-# proyectovcm
+# Proyecto VCM - Video del Jueves UNACH
 
-Aplicación Flutter VCM Video UNACH
+Aplicación móvil desarrollada en Flutter para la Evaluación N°2 de la asignatura Desarrollo Móvil Multiplataforma.
 
-## Getting Started
+## Descripción
 
-This project is a starting point for a Flutter application.
+La aplicación presenta contenido audiovisual académico relacionado con proyectos de Vinculación con el Medio (VCM) de la Universidad Adventista de Chile. Además, permite registrar usuarios mediante correo institucional, visualizar un video, responder una encuesta y recibir una retroalimentación final mediante una insignia motivacional.
 
-A few resources to get you started if this is your first Flutter project:
+## Funcionalidades principales
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Pantalla splash institucional.
+- Registro e inicio de sesión con correo `@alu.unach.cl`.
+- Pantalla de inicio con descripción del proyecto.
+- Reproducción de video académico.
+- Carga automática del video luego de 10 segundos.
+- Controles básicos de reproducción.
+- Encuesta con tres campos de texto.
+- Registro de respuestas en Firebase Firestore.
+- Almacenamiento de:
+    - correo del usuario,
+    - respuestas de la encuesta,
+    - modelo del dispositivo,
+    - sistema operativo,
+    - fecha y hora del envío.
+- Pantalla final con mensaje de felicitación e insignia.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tecnologías utilizadas
+
+- Flutter
+- Dart
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Core
+- Device Info Plus
+- Video Player
+- Google Fonts
+
+## Requisitos
+- Flutter instalado.
+- Android Studio.
+- Emulador Android o dispositivo físico.
+- Firebase configurado.
+- Conexión a internet.
+
+
+
+## Estructura del proyecto
+
+```text
+lib/
+ ├── constants/
+ ├── models/
+ ├── screens/
+ ├── services/
+ ├── widgets/
+ ├── app.dart
+ ├── firebase_options.dart
+ └── main.dart
+
+## Instalación y ejecución
+
+### Clonar el repositorio
+
+```bash
+git clone URL_DEL_REPOSITORIO
+```
+
+### Entrar al proyecto
+
+```bash
+cd ProyectoVCM
+```
+
+### Instalar dependencias
+
+```bash
+flutter pub get
+```
+
+### Ejecutar la aplicación
+
+```bash
+flutter run
+```
+
+---
+
+## Capturas de pantalla
+
+CAPTURAS EN CARPETA SCRENSHOTS:
+
+- Splash screen
+- Login
+- Registro
+- Inicio
+- Video
+- Encuesta
+- Pantalla final
+
+
+---
+
+## Autor
+
+Benjamín Baza  
+Universidad Adventista de Chile  
+Facultad de Ingeniería y Negocios
