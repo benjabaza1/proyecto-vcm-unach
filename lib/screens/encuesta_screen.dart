@@ -4,6 +4,7 @@ import '../constants/app_colors.dart';
 import '../services/encuesta_service.dart';
 import '../widgets/base_pantalla.dart';
 import '../widgets/boton_principal.dart';
+import '../widgets/campo_texto.dart';
 import 'final_screen.dart';
 
 class EncuestaScreen extends StatefulWidget {
@@ -14,14 +15,16 @@ class EncuestaScreen extends StatefulWidget {
 }
 
 class _EncuestaScreenState extends State<EncuestaScreen> {
-  String? respuesta1;
-  String? respuesta2;
-  String? respuesta3;
+  final respuesta1 = TextEditingController();
+  final respuesta2 = TextEditingController();
+  final respuesta3 = TextEditingController();
 
   bool cargando = false;
 
   Future<void> enviarEncuesta() async {
-    if (respuesta1 == null || respuesta2 == null || respuesta3 == null) {
+    if (respuesta1.text.trim().isEmpty ||
+        respuesta2.text.trim().isEmpty ||
+        respuesta3.text.trim().isEmpty) {
       mostrarMensaje('Debes responder todas las preguntas');
       return;
     }
@@ -30,18 +33,16 @@ class _EncuestaScreenState extends State<EncuestaScreen> {
 
     try {
       await EncuestaService().guardarEncuesta(
-        respuesta1: respuesta1!,
-        respuesta2: respuesta2!,
-        respuesta3: respuesta3!,
+        respuesta1: respuesta1.text.trim(),
+        respuesta2: respuesta2.text.trim(),
+        respuesta3: respuesta3.text.trim(),
       );
 
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const FinalScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const FinalScreen()),
       );
     } catch (e) {
       mostrarMensaje('No se pudieron guardar las respuestas.');
@@ -59,131 +60,65 @@ class _EncuestaScreenState extends State<EncuestaScreen> {
   }
 
   @override
+  void dispose() {
+    respuesta1.dispose();
+    respuesta2.dispose();
+    respuesta3.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BasePantalla(
       indexActual: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Text(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Text(
               'Encuesta VCM',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: azulUnach,
               ),
             ),
-          ),
 
-          const SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-          const Center(
-            child: Text(
-              'Selecciona una respuesta para cada pregunta.',
+            const Text(
+              'Responde las siguientes preguntas sobre el proyecto VCM.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black54,
-              ),
+              style: TextStyle(fontSize: 15, color: Colors.black54),
             ),
-          ),
 
-          const SizedBox(height: 25),
+            const SizedBox(height: 25),
 
-          preguntaOpciones(
-            titulo: '1. ¿Qué tan útil te pareció el video?',
-            valorActual: respuesta1,
-            opciones: const [
-              'Muy útil',
-              'Útil',
-              'Poco útil',
-              'Nada útil',
-            ],
-            onChanged: (valor) {
-              setState(() => respuesta1 = valor);
-            },
-          ),
-
-          preguntaOpciones(
-            titulo: '2. ¿El contenido fue claro?',
-            valorActual: respuesta2,
-            opciones: const [
-              'Muy claro',
-              'Claro',
-              'Confuso',
-            ],
-            onChanged: (valor) {
-              setState(() => respuesta2 = valor);
-            },
-          ),
-
-          preguntaOpciones(
-            titulo: '3. ¿Te gustaría ver más videos como este?',
-            valorActual: respuesta3,
-            opciones: const [
-              'Sí',
-              'No',
-            ],
-            onChanged: (valor) {
-              setState(() => respuesta3 = valor);
-            },
-          ),
-
-          const Spacer(),
-
-          cargando
-              ? const Center(
-            child: CircularProgressIndicator(color: azulUnach),
-          )
-              : BotonPrincipal(
-            texto: 'Enviar respuestas',
-            onPressed: enviarEncuesta,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget preguntaOpciones({
-    required String titulo,
-    required String? valorActual,
-    required List<String> opciones,
-    required Function(String?) onChanged,
-  }) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 18),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: fondoSuave,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            titulo,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: azulUnach,
+            CampoTexto(
+              label: '¿Qué es un proyecto VCM?',
+              controller: respuesta1,
             ),
-          ),
 
-          const SizedBox(height: 8),
-
-          ...opciones.map(
-                (opcion) => RadioListTile<String>(
-              value: opcion,
-              groupValue: valorActual,
-              activeColor: azulUnach,
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: Text(opcion),
-              onChanged: onChanged,
+            CampoTexto(
+              label: '¿Cuál es el mejor proyecto?',
+              controller: respuesta2,
             ),
-          ),
-        ],
+
+            CampoTexto(
+              label: '¿Qué proyecto es más complejo?',
+              controller: respuesta3,
+            ),
+
+            const SizedBox(height: 25),
+
+            cargando
+                ? const CircularProgressIndicator(color: azulUnach)
+                : BotonPrincipal(
+              texto: 'Enviar respuestas',
+              onPressed: enviarEncuesta,
+            ),
+          ],
+        ),
       ),
     );
   }
